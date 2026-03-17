@@ -4,7 +4,7 @@ interface HeroBannerProps {
 }
 
 export function HeroBanner({
-  title = 'Como eu posso ajudar você?',
+  title = 'How can I help you?',
   subtitle = 'Browse our help categories or search for a specific topic',
 }: HeroBannerProps) {
   return (
