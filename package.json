@@ -15,9 +15,7 @@
     "typescript": "catalog:devDeps"
   },
   "scripts": {
-    "start-dependencies": "docker compose up -d",
-    "stop-dependencies": "docker compose down",
-    "prepare": "husky",
+"prepare": "husky",
     "postinstall": "pnpm prepare",
     "dev": "TURBO_TELEMETRY_DISABLED=1 turbo run dev --env-mode=loose",
     "dev:api": "TURBO_TELEMETRY_DISABLED=1 turbo run dev -F api --env-mode=loose",
