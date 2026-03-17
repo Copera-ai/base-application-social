@@ -6,6 +6,8 @@ import "reflect-metadata";
 import { Env } from "./utils/Env.js";
 
 (async () => {
+  console.log("Starting API");
+  console.log(Env.database.uri);
   await Promise.all([
     MongoDB.connect(process.pid.toString(), Env.database.uri),
   ]);
