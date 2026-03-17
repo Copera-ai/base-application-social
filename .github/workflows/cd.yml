@@ -43,6 +43,7 @@ jobs:
       APP_NAME: api
       APP_DOCKER_FILE: infra/Dockerfile.api
       SERVICES: api
+      REPOSITORY_OWNER: 'copera-ai'
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
       SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
