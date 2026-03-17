@@ -1,0 +1,22 @@
+FROM node:24-slim AS base
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@10.28.2 --activate
+WORKDIR /app
+
+FROM base AS dependencies
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY patches/ ./patches/
+COPY packages/common/package.json ./packages/common/package.json
+COPY apps/api/package.json ./apps/api/package.json
+RUN pnpm install --frozen-lockfile
+
+FROM dependencies AS production
+COPY packages/common/ ./packages/common/
+COPY apps/api/ ./apps/api/
+RUN pnpm --filter common build && pnpm --filter api build
+
+EXPOSE 3000
+
+CMD ["node", "--enable-source-maps", "--experimental-specifier-resolution=node", "--trace-warnings", "--no-warnings", "apps/api/dist/main.js"]

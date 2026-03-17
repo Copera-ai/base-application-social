@@ -1,0 +1,42 @@
+{
+  "name": "common",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsdown",
+    "test": "vitest --watch false",
+    "test:watch": "vitest --watch"
+  },
+  "exports": {
+    ".": {
+      "typescript": "./src/index.ts",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    },
+    "./api-utils": {
+      "typescript": "./src/api-utils/index.ts",
+      "import": "./dist/api-utils/index.mjs",
+      "types": "./dist/api-utils/index.d.mts"
+    },
+    "./core": {
+      "typescript": "./src/core/index.ts",
+      "import": "./dist/core/index.mjs",
+      "types": "./dist/core/index.d.mts"
+    }
+  },
+  "dependencies": {
+    "pino": "catalog:utils",
+    "pino-pretty": "catalog:utils",
+    "yup": "catalog:utils",
+    "mongoose": "catalog:typegoose"
+  },
+  "devDependencies": {
+    "typescript": "catalog:devDeps",
+    "tsdown": "catalog:devDeps",
+    "vitest": "catalog:devDeps",
+    "vite-tsconfig-paths": "catalog:devDeps"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
+}

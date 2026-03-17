@@ -1,0 +1,104 @@
+name: Deploy WEB
+
+on:
+  workflow_call:
+    inputs:
+      BUILD_CMD:
+        type: string
+        required: true
+      APP:
+        type: string
+        required: true
+      ENVIRONMENT:
+        type: string
+        required: true
+        default: 'development'
+      BUCKET_NAME:
+        type: string
+        required: true
+      CLOUDFRONT_DISTRIBUTION_ID:
+        type: string
+        required: true
+      BUCKET_URL:
+        type: string
+        required: true
+    secrets:
+      AWS_ACCESS_KEY:
+        required: true
+      AWS_SECRET_KEY:
+        required: true
+        
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.28.2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Cache node_modules
+        uses: actions/cache@v5
+        id: cache-node-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-node-modules-${{ inputs.APP }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install deps
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: pnpm -F ${{ inputs.APP }}... install --frozen-lockfile
+
+      - name: Build
+        run: pnpm ${{ inputs.BUILD_CMD }}
+        env:
+          NODE_ENV: ${{ inputs.ENVIRONMENT }}
+
+      - name: Deploy to s3 with sync and Invalidate CloudFront cache
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+          AWS_DEFAULT_REGION: 'us-east-1'
+        run: |
+          set -e
+          
+          # Configure AWS CLI with endpoint URL and performance settings
+          aws configure set default.s3.endpoint_url ${{ inputs.BUCKET_URL }}
+          echo "Set S3 endpoint URL to ${{ inputs.BUCKET_URL }}"
+          
+          aws configure set default.s3.max_concurrent_requests 50
+          echo "Set max concurrent requests to 50"
+
+          # Sync asset files with long-term caching, excluding .js.map files
+          aws s3 sync ./apps/${{ inputs.APP }}/build/assets s3://${{ inputs.BUCKET_NAME }}/assets \
+            --acl public-read \
+            --delete \
+            --cache-control "public, max-age=31536000, s-maxage=31536000, immutable" \
+            --exclude "*.js.map"
+
+          echo "Uploaded asset files"
+          
+          # Sync non-asset files with appropriate caching, excluding .js.map files
+          aws s3 sync ./apps/${{ inputs.APP }}/build s3://${{ inputs.BUCKET_NAME }} \
+            --acl public-read \
+            --delete \
+            --exclude "assets/*" \
+            --exclude "*.js.map" \
+            --cache-control "public, max-age=0, must-revalidate"
+            
+          echo "Uploaded non-asset files"
+
+          # Invalidate CloudFront cache for non-hashed files
+          aws cloudfront create-invalidation --distribution-id ${{ inputs.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/index.html" "/robots.txt" "/service-worker.js" "/*.json"
+
+          echo "CloudFront cache invalidated"

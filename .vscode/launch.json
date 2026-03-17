@@ -1,0 +1,18 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "attach API",
+      "type": "node",
+      "request": "attach",
+      "restart": true,
+      "sourceMaps": true,
+      "address": "127.0.0.1",
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**/*"
+      ],
+      "port": 4900
+    }
+  ]
+}

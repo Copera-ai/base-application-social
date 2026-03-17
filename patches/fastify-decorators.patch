@@ -1,0 +1,42 @@
+diff --git a/decorators/controller.js b/decorators/controller.js
+index 3bcc207f615419141bbdae7a5f8ecaf2cd8295f2..5a5a1ea14c70f86989fa349ebe3c0cf2b9195b1e 100644
+--- a/decorators/controller.js
++++ b/decorators/controller.js
+@@ -10,6 +10,8 @@ import { CLASS_LOADER, CREATOR } from '../symbols/index.js';
+ import { injectControllerOptions } from './helpers/inject-controller-options.js';
+ import { patchMethods } from './helpers/patch-methods.js';
+ import { ControllerTypeStrategies } from './strategies/controller-type.js';
++import 'reflect-metadata';
++
+ function makeConfig(config) {
+     if (typeof config === 'string')
+         config = { route: config };
+@@ -18,6 +20,7 @@ function makeConfig(config) {
+ export function Controller(config) {
+     return (controller) => {
+         const { route, type, tags } = makeConfig(config);
++        Reflect.defineMetadata('fastify-decorator:controller-route', route, controller);
+         injectControllerOptions(controller);
+         patchMethods(controller);
+         controller[CREATOR].register = async (instance, prefix = '', classLoader = instance[CLASS_LOADER]) => {
+diff --git a/decorators/helpers/request-decorators.factory.js b/decorators/helpers/request-decorators.factory.js
+index 5672dd88ecd32ec40a9cb6bce95c2a5b3d5193d6..de2797eb14d956e462c5d64716e477990bdb6318 100644
+--- a/decorators/helpers/request-decorators.factory.js
++++ b/decorators/helpers/request-decorators.factory.js
+@@ -8,6 +8,8 @@
+ import { CREATOR, ERROR_HANDLERS, HANDLERS, HOOKS } from '../../symbols/index.js';
+ import { ensureHandlers, hasErrorHandlers, hasHooks } from './class-properties.js';
+ import { createErrorsHandler } from './create-errors-handler.js';
++import 'reflect-metadata';
++
+ function parseConfig(config = '/', options = {}) {
+     if (typeof config === 'string')
+         return { url: config, options };
+@@ -29,6 +31,7 @@ export function requestDecoratorsFactory(method) {
+     return function (routeOrConfig, options) {
+         const config = parseConfig(routeOrConfig, options);
+         return function (target, propKey) {
++            Reflect.defineMetadata('fastify-decorator:route', config.url, target, propKey);
+             if (propKey) {
+                 controllerMethodDecoratorsFactory(method, config, target, propKey);
+                 return;

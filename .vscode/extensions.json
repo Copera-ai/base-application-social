@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "editorconfig.editorconfig",
+    "mikestead.dotenv",
+    "yoavbls.pretty-ts-errors",
+    "biomejs.biome",
+    "antfu.pnpm-catalog-lens"
+  ]
+}

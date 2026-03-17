@@ -1,0 +1,323 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.6/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "includes": [
+      "**",
+      "!**/.vscode",
+      "!**/*.min.js",
+      "!**/dist/**",
+      "!index.html",
+      "!**/build/**"
+    ],
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 80,
+    "attributePosition": "auto"
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "groups": [
+              ":PACKAGE:",
+              ":BLANK_LINE:",
+              ":ALIAS:",
+              ":BLANK_LINE:"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "linter": {
+    "includes": [
+      "**",
+      "!**/.vscode",
+      "!**/*.min.js",
+      "!**/dist/**",
+      "!index.html",
+      "!**/build/**",
+      "!**/public/**"
+    ],
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noBannedTypes": "error",
+        "noUselessThisAlias": "error",
+        "noUselessTypeConstraint": "error",
+        "useLiteralKeys": "off",
+        "noForEach": "off",
+        "useOptionalChain": "off",
+        "noUselessTernary": "off",
+        "useArrowFunction": "off",
+        "noUselessContinue": "off",
+        "noArguments": "error"
+      },
+      "correctness": {
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "noPrecisionLoss": "error",
+        "noUnusedVariables": "off",
+        "noConstAssign": "off",
+        "noGlobalObjectCalls": "off",
+        "noInvalidConstructorSuper": "off",
+        "noInvalidBuiltinInstantiation": "off",
+        "noSetterReturn": "off",
+        "noUndeclaredVariables": "off",
+        "noUnreachable": "off",
+        "noUnreachableSuper": "off",
+        "useImportExtensions": "off"
+      },
+      "performance": {
+        "noDelete": "off",
+        "noAccumulatingSpread": "off"
+      },
+      "style": {
+        "noDefaultExport": "error",
+        "noNamespace": "error",
+        "useAsConstAssertion": "error",
+        "useConst": "error",
+        "noInferrableTypes": "off",
+        "noNonNullAssertion": "off",
+        "useBlockStatements": "off",
+        "useImportType": "off",
+        "useTemplate": "off",
+        "noUnusedTemplateLiteral": "off",
+        "useNodejsImportProtocol": "off",
+        "useNumberNamespace": "off"
+      },
+      "suspicious": {
+        "noExtraNonNullAssertion": "error",
+        "noMisleadingInstantiator": "error",
+        "noUnsafeDeclarationMerging": "error",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noDuplicateClassMembers": "off",
+        "noDuplicateObjectKeys": "off",
+        "noDuplicateParameters": "off",
+        "noFunctionAssign": "off",
+        "noImportAssign": "off",
+        "noRedeclare": "off",
+        "noUnsafeNegation": "off",
+        "useGetterReturn": "off",
+        "noGlobalIsNan": "off",
+        "noVar": "error"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always",
+      "bracketSpacing": true,
+      "bracketSameLine": false,
+      "quoteStyle": "double",
+      "attributePosition": "auto"
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "**/apps/api/**"
+      ],
+      "assist": {
+        "actions": {
+          "source": {
+            "organizeImports": {
+              "level": "on",
+              "options": {
+                "groups": [
+                  ":NODE:",
+                  ":BLANK_LINE:",
+                  ":PACKAGE:",
+                  ":BLANK_LINE:",
+                  ":ALIAS:",
+                  ":BLANK_LINE:"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "javascript": {
+        "parser": {
+          "unsafeParameterDecoratorsEnabled": true
+        }
+      },
+      "linter": {
+        "rules": {
+          "performance": {
+            "noBarrelFile": "off"
+          },
+          "complexity": {
+            "noStaticOnlyClass": "off",
+            "noExtraBooleanCast": "off",
+            "useRegexLiterals": "off",
+            "noCommaOperator": "off"
+          },
+          "correctness": {
+            "noSwitchDeclarations": "off",
+            "noUnsafeOptionalChaining": "off",
+            "noSelfAssign": "off",
+            "noVoidTypeReturn": "off",
+            "noEmptyPattern": "off",
+            "useImportExtensions": {
+              "fix": "safe",
+              "level": "error",
+              "options": {
+                "forceJsExtensions": true
+              }
+            }
+          },
+          "style": {
+            "noUselessElse": "off",
+            "noParameterAssign": "off",
+            "useDefaultParameterLast": "off",
+            "noDefaultExport": "off",
+            "noNamespace": "off"
+          },
+          "suspicious": {
+            "noAssignInExpressions": "off",
+            "noDoubleEquals": "off",
+            "noThenProperty": "off",
+            "noDuplicateCase": "off",
+            "noSelfCompare": "off",
+            "noConstEnum": "error",
+            "noConsole": {
+              "level": "error"
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/apps/web/**"
+      ],
+      "javascript": {
+        "formatter": {
+          "quoteStyle": "single"
+        }
+      },
+      "css": {
+        "parser": {
+          "tailwindDirectives": true
+        }
+      },
+      "linter": {
+        "rules": {
+          "a11y": {
+            "noSvgWithoutTitle": "off",
+            "noLabelWithoutControl": "off",
+            "useAltText": "off",
+            "useKeyWithClickEvents": "off",
+            "useValidAnchor": "off",
+            "useButtonType": "off"
+          },
+          "complexity": {
+            "noExtraBooleanCast": "off",
+            "noUselessSwitchCase": "off",
+            "noUselessFragments": "off",
+            "useRegexLiterals": "off",
+            "noUselessEmptyExport": "off",
+            "noBannedTypes": "warn",
+            "useFlatMap": "off"
+          },
+          "correctness": {
+            "noChildrenProp": "error",
+            "useJsxKeyInIterable": "error",
+            "useHookAtTopLevel": "off",
+            "noSwitchDeclarations": "off",
+            "noUnsafeOptionalChaining": "off",
+            "useImportExtensions": "off",
+            "useExhaustiveDependencies": "warn",
+            "noUnusedFunctionParameters": "warn"
+          },
+          "security": {
+            "noDangerouslySetInnerHtml": "off",
+            "noBlankTarget": "error"
+          },
+          "style": {
+            "useSelfClosingElements": "off",
+            "useDefaultParameterLast": "off",
+            "noDefaultExport": "off",
+            "useConst": "off",
+            "useSingleVarDeclarator": "off",
+            "noParameterAssign": "off",
+            "noUselessElse": "off",
+            "useEnumInitializers": "off"
+          },
+          "suspicious": {
+            "noCommentText": "error",
+            "noDuplicateJsxProps": "error",
+            "noSuspiciousSemicolonInJsx": "off",
+            "noAsyncPromiseExecutor": "off",
+            "noArrayIndexKey": "off",
+            "noAssignInExpressions": "off",
+            "noShadowRestrictedNames": "off",
+            "noFallthroughSwitchClause": "off"
+          },
+          "nursery": {}
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/*.json"
+      ],
+      "json": {
+        "formatter": {
+          "lineWidth": 2
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/*.yaml",
+        "**/*.yml"
+      ],
+      "javascript": {
+        "formatter": {
+          "quoteStyle": "double"
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/vite.config.ts",
+        "**/vitest.config.ts",
+        "**/vitest.config.mjs",
+        "**/tsdown.config.ts",
+        "**/etsc.config.mjs"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noDefaultExport": "off"
+          }
+        }
+      }
+    }
+  ]
+}

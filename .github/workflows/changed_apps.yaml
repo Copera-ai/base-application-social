@@ -1,0 +1,86 @@
+name: 'Determine changed packages'
+
+on:
+  workflow_call:
+    outputs:
+      changed_packages:
+        description: 'Stringified JSON array of changed packages in this changeset'
+        value: ${{ jobs.dry-run.outputs.changed_packages }}
+        
+      api_changed:
+        description: 'Indicates if the api or its dependencies have changed'
+        value: ${{ jobs.dry-run.outputs.api_changed }}
+      web_changed:
+        description: 'Indicates if the WEB or its dependencies have changed'
+        value: ${{ jobs.dry-run.outputs.web_changed }}
+
+jobs:
+  dry-run:
+    runs-on: ubuntu-latest
+    env:
+      TURBO_REF_FILTER: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+    outputs:
+      changed_packages: ${{ steps.output-changed-packages.outputs.changed_packages }}
+      api_changed: ${{ steps.api-changed.outputs.result }}
+      web_changed: ${{ steps.web-changed.outputs.result }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Changeset
+        id: changeset
+        run: |
+          echo "TURBO_REF_FILTER: ${{ env.TURBO_REF_FILTER }}"
+          echo "github.sha: ${{ github.sha }}"
+          
+          # Check if the reference commit exists
+          if git cat-file -e ${{ env.TURBO_REF_FILTER }} 2>/dev/null; then
+            echo "Using reference commit: ${{ env.TURBO_REF_FILTER }}"
+            CHANGED_FILES=$(git diff --name-only ${{ env.TURBO_REF_FILTER }} ${{ github.sha }})
+          else
+            echo "Reference commit ${{ env.TURBO_REF_FILTER }} not found (likely due to force push)"
+            echo "Trying fallback strategies..."
+            
+            # Try to use HEAD~1 as fallback, or if that fails, compare with origin/main
+            if git cat-file -e HEAD~1 2>/dev/null; then
+              echo "Using HEAD~1 as reference"
+              CHANGED_FILES=$(git diff --name-only HEAD~1 ${{ github.sha }})
+            elif git cat-file -e origin/main 2>/dev/null; then
+              echo "Using origin/main as reference"
+              CHANGED_FILES=$(git diff --name-only origin/main ${{ github.sha }})
+            else
+              echo "No reliable reference found, treating all apps as potentially changed"
+              # List all apps instead of files to be safer
+              CHANGED_FILES=$(find apps -mindepth 1 -maxdepth 1 -type d -exec basename {} \; | sed 's/^/apps\//' | head -20)
+            fi
+          fi
+
+          echo "Changed files detected:"
+          echo "$CHANGED_FILES"
+
+          CHANGED_APPS=$(echo "$CHANGED_FILES" | grep "^apps/" | cut -d "/" -f 2 | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          
+          echo "Changed apps: $CHANGED_APPS"
+
+          echo "result<<EOF" >> $GITHUB_OUTPUT
+          echo "{\"packages\": $CHANGED_APPS}" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Output changed packages
+        id: output-changed-packages
+        run: |
+          echo 'changed_packages<<CHANGED_PACKAGES_DELIMITER' >> $GITHUB_OUTPUT
+          echo "${{ toJSON(fromJSON(steps.changeset.outputs.result).packages) }}" >> $GITHUB_OUTPUT
+          echo 'CHANGED_PACKAGES_DELIMITER' >> $GITHUB_OUTPUT
+
+      - name: Did the API or its dependencies change?
+        id: api-changed
+        if: ${{ contains(fromJSON(steps.changeset.outputs.result).packages, 'api') }}
+        run: echo "result=true" >> $GITHUB_OUTPUT
+
+      - name: Did the WEB or its dependencies change?
+        id: web-changed
+        if: ${{ contains(fromJSON(steps.changeset.outputs.result).packages, 'web') }}
+        run: echo "result=true" >> $GITHUB_OUTPUT

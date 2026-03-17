@@ -1,0 +1,48 @@
+{
+  "name": "base-application-template",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "2.4.6",
+    "@biomejs/cli-darwin-x64": "2.4.6",
+    "@commitlint/cli": "^20.4.3",
+    "@commitlint/config-conventional": "^20.4.3",
+    "@release-it/conventional-changelog": "^10.0.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.3.2",
+    "tsx": "^4.21.0",
+    "turbo": "^2.8.14",
+    "typescript": "catalog:devDeps"
+  },
+  "scripts": {
+    "start-dependencies": "docker compose up -d",
+    "stop-dependencies": "docker compose down",
+    "prepare": "husky",
+    "postinstall": "pnpm prepare",
+    "dev": "TURBO_TELEMETRY_DISABLED=1 turbo run dev --env-mode=loose",
+    "dev:api": "TURBO_TELEMETRY_DISABLED=1 turbo run dev -F api --env-mode=loose",
+    "dev:web": "TURBO_TELEMETRY_DISABLED=1 turbo run dev -F web",
+    "build:api": "TURBO_TELEMETRY_DISABLED=1 turbo run build -F api",
+    "build:web": "TURBO_TELEMETRY_DISABLED=1 turbo run build -F web",
+    "start:api": "TURBO_TELEMETRY_DISABLED=1 turbo run start -F api",
+    "start:web": "TURBO_TELEMETRY_DISABLED=1 turbo run start -F web",
+    "lint": "biome check .",
+    "type-check": "turbo type-check",
+    "test": "turbo run test -F api",
+    "clean-all": "rm -rf node_modules .turbo dist {apps, packages}/**/{node_modules, .turbo, dist}",
+    "type-check:api": "TURBO_TELEMETRY_DISABLED=1 turbo run type-check -F api",
+    "type-check:web": "TURBO_TELEMETRY_DISABLED=1 turbo run type-check -F web"
+  },
+  "lint-staged": {
+    "*": [
+      "biome check --no-errors-on-unmatched --files-ignore-unknown=true"
+    ]
+  },
+  "packageManager": "pnpm@10.28.2",
+  "pnpm": {
+    "patchedDependencies": {
+      "fastify-decorators": "patches/fastify-decorators.patch",
+      "tscpaths": "patches/tscpaths.patch"
+    }
+  }
+}

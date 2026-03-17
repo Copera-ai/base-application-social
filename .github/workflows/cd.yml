@@ -1,0 +1,50 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  changed-packages:
+    name: Determine which apps changed
+    uses: ./.github/workflows/changed_apps.yaml
+
+  deploy-web:
+    permissions:
+      packages: write
+      contents: read
+      pull-requests: read
+      actions: write
+    name: Deploy WEB
+    needs: [changed-packages]
+    if: needs.changed-packages.outputs.web_changed == 'true'
+    uses: ./.github/workflows/deploy_web.yaml
+    with:
+      BUILD_CMD: 'build:web'
+      APP: web
+      ENVIRONMENT: 'production'
+      BUCKET_NAME: ${{ vars.BUCKET_NAME }}
+      CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CF_DIST_ID }}
+      BUCKET_URL: 'https://xxx.s3-accelerate.amazonaws.com'
+    secrets:
+      AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+      AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_KEY }}
+
+  deploy-api:
+    permissions:
+      packages: write
+      contents: read
+    name: Deploy API
+    needs: [changed-packages]
+    if: needs.changed-packages.outputs.api_changed == 'true'
+    uses: ./.github/workflows/deploy_app.yaml
+    with:
+      APP_NAME: api
+      APP_DOCKER_FILE: infra/Dockerfile.api
+      SERVICES: api
+    secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_PRIVATE_KEY }}
+      SSH_HOST: ${{ secrets.VPS_SSH_HOST }}
+      SSH_USER: ${{ secrets.VPS_SSH_USER }}
+      DEPLOY_PATH: ${{ secrets.VPS_DEPLOY_PATH }}

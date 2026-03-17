@@ -1,0 +1,18 @@
+node_modules
+dist
+env.json
+env.json.checksum
+tmp/*
+!tmp/.gitkeep
+.DS_Store
+mercurius-schema.json
+
+# yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+.env*
+!.env.example
