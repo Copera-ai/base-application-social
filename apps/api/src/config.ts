@@ -1,5 +1,5 @@
 export const COPERA_CONFIG = {
-  boardId: "69b99cd29afc38fa0142c83f",
+  boardId: "69b9a51cc716a6e2b665522d",
 
   ticketsTable: {
     ticketsTableId: "69b9a51cc716a6e2b6655231",
