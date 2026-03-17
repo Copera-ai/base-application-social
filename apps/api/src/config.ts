@@ -1,49 +1,49 @@
 export const COPERA_CONFIG = {
-  boardId: "6978de1a2d60e272dda083a1",
+  boardId: "69b99cd29afc38fa0142c83f",
 
   ticketsTable: {
-    ticketsTableId: "6978de1b2d60e272dda083a5",
-    titleColumnId: "6978de1b2d60e272dda083a8", // Title Column
-    detailsColumnId: "6978e12d2d60e272dda087f3", // Text Column
-    userColumnId: "697904709bf113cc7f71838f", // Link Column
-    statusColumnId: "6979060a9bf113cc7f71873f", // Select Column
-    requestTypeColumnId: "699e570fddbbc6d6f0e7515a", // Select Column
+    ticketsTableId: "69b9a51cc716a6e2b6655231",
+    titleColumnId: "69b9a51cc716a6e2b6655234", // Title Column
+    detailsColumnId: "69b9a540c716a6e2b6655478", // Text Column
+    userColumnId: "69b9a570893316af34ea080d", // Link Column
+    statusColumnId: "69b9a59c893316af34ea0a55", // Select Column
+    requestTypeColumnId: "69b9a5ca893316af34ea0c29", // Select Column
     requestTypeOptions: [
       {
         label: "General Support",
-        optionId: "699e570fddbbc6d6f0e7515c",
+        optionId: "69b9a5ca893316af34ea0c2b",
       },
       {
         label: "Bug Report",
-        optionId: "699e570fddbbc6d6f0e7515d",
+        optionId: "69b9a5ca893316af34ea0c2c",
       },
       {
         label: "Feature Request",
-        optionId: "699e570fddbbc6d6f0e7515e",
+        optionId: "69b9a5ca893316af34ea0c2d",
       },
       {
         label: "Account & Access",
-        optionId: "699e570fddbbc6d6f0e7515f",
+        optionId: "69b9a5ca893316af34ea0c2e",
       },
       {
         label: "Billing",
-        optionId: "699e570fddbbc6d6f0e75160",
+        optionId: "69b9a5ca893316af34ea0c2f",
       },
       {
         label: "Onboarding",
-        optionId: "699e570fddbbc6d6f0e75161",
+        optionId: "69b9a5ca893316af34ea0c30",
       },
     ],
   },
   usersTable: {
-    usersTableId: "6978de2a2d60e272dda0841a",
-    nameColumnId: "6978de2a2d60e272dda0841d",
-    identifierColumnId: "6978df202d60e272dda085c9",
-    passwordColumnId: "6978df272d60e272dda085d1",
-    roleColumnId: "699e6d7bbd5acef2202344bf",
+    usersTableId: "69b9a54d893316af34ea065e",
+    nameColumnId: "69b9a54d893316af34ea0661", // Name Column
+    identifierColumnId: "69b9a5fe893316af34ea0e8a", // Email Column
+    passwordColumnId: "69b9a605c716a6e2b6655e78", // Password Column
+    roleColumnId: "69b9a61c893316af34ea109a", // Role Column
     roleOptions: {
-      admin: "699e6d7cbd5acef2202344c1",
-      user: "699e6d7cbd5acef2202344c2",
+      admin: "69b9a61c893316af34ea109c", // Admin Role
+      user: "69b9a61c893316af34ea109d", // User Role
     },
   },
 };

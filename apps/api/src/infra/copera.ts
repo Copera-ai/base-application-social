@@ -4,5 +4,4 @@ import { Env } from "~/utils/Env.js";
 
 export const copera = CoperaAI({
   apiKey: Env.copera.apiKey,
-  sandbox: true,
 });
